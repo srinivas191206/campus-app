@@ -36,17 +36,17 @@ const MobileLayout = () => {
               <button
                 key={path}
                 onClick={() => navigate(path)}
-                className={`flex flex-col items-center gap-1 px-4 py-1.5 rounded-xl transition-all duration-200 active:scale-90 ${
+                className={`flex flex-col items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-200 active:scale-90 ${
                   active
                     ? 'text-primary'
-                    : 'text-muted-foreground'
+                    : 'text-muted-foreground/60'
                 }`}
               >
-                <div className={`relative ${active ? '' : ''}`}>
+                <div className="relative">
                   {active && (
-                    <div className="absolute -inset-1.5 rounded-lg bg-primary/10" />
+                    <div className="absolute -inset-1.5 rounded-xl bg-primary/10" />
                   )}
-                  <Icon className={`relative w-5 h-5 ${active ? 'stroke-[2.5]' : 'stroke-[1.8]'}`} />
+                  <Icon className={`relative w-[22px] h-[22px] ${active ? 'stroke-[2.5]' : 'stroke-[1.5]'}`} />
                 </div>
                 <span className={`text-[10px] ${active ? 'font-bold' : 'font-medium'}`}>
                   {label}

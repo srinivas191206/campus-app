@@ -17,8 +17,8 @@ const UTILITIES = [
     gradient: 'cs-gradient-accent',
   },
   {
-    title: 'Attendance & Bunk Planner',
-    desc: 'Track attendance and plan bunks safely',
+    title: 'Attendance Tracker',
+    desc: 'Track attendance and Plan accordingly',
     icon: BarChart3,
     path: '/utilities/attendance',
     gradient: 'cs-gradient-warm',

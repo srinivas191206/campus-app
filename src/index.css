@@ -10,7 +10,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
+    --background: 210 20% 98%;
     --foreground: 220 30% 12%;
 
     --card: 0 0% 100%;
@@ -54,8 +54,8 @@ All colors MUST be HSL.
     --cs-gradient-accent: linear-gradient(135deg, hsl(170 70% 40%), hsl(180 60% 45%));
     --cs-gradient-warm: linear-gradient(135deg, hsl(25 90% 55%), hsl(15 85% 50%));
     --cs-gradient-purple: linear-gradient(135deg, hsl(260 70% 55%), hsl(280 60% 50%));
-    --cs-shadow-card: 0 2px 8px -2px rgba(0, 0, 0, 0.06), 0 1px 3px -1px rgba(0, 0, 0, 0.04);
-    --cs-shadow-elevated: 0 6px 16px -4px rgba(0, 0, 0, 0.1), 0 2px 6px -2px rgba(0, 0, 0, 0.06);
+    --cs-shadow-card: 0 2px 8px -2px rgba(0, 0, 0, 0.04), 0 1px 3px -1px rgba(0, 0, 0, 0.02);
+    --cs-shadow-elevated: 0 8px 30px rgba(0, 0, 0, 0.04);
   }
 
   .dark {
@@ -131,7 +131,7 @@ All colors MUST be HSL.
   }
 
   .cs-section-title {
-    @apply text-sm font-semibold uppercase tracking-wider text-muted-foreground;
+    @apply text-base font-semibold tracking-tight text-foreground/90;
   }
 
   .hide-scrollbar::-webkit-scrollbar {
@@ -144,7 +144,7 @@ All colors MUST be HSL.
 
   .cs-header-card {
     @apply bg-card border border-border;
-    box-shadow: var(--cs-shadow-elevated);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.05); /* Softer premium shadow */
     background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--primary) / 0.04) 100%);
   }
 
