@@ -14,6 +14,18 @@ export interface Semester {
   sgpa: number | null;
 }
 
+export interface SemesterRecord {
+  id: string;
+  title: string;
+  academicYear?: string;
+  studentName: string;
+  course: string;
+  year: string;
+  subjects: Subject[];
+  lastUpdated: string;
+  sgpa: number;
+}
+
 export interface TimetableEntry {
   id: string;
   day: string;

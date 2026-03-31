@@ -17,30 +17,18 @@ interface NotificationSettings {
   assignments: boolean;
 }
 
-interface AcademicSettings {
-  year: string;
-  semester: string;
-  section: string;
-}
-
 interface ReminderSettings {
   timing: string;
 }
 
 type ThemeMode = 'light' | 'dark' | 'system';
 
-const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
-const SEMESTERS = ['1st Sem', '2nd Sem'];
-const SECTIONS = ['A', 'B', 'C'];
 const REMINDER_OPTIONS = ['15 minutes', '30 minutes', '1 hour', '2 hours', '1 day'];
 
 const SettingsPage = () => {
 
   const [notifications, setNotifications] = useState<NotificationSettings>(
     () => store.get('settings_notifications', { announcements: true, events: true, assignments: true })
-  );
-  const [academic, setAcademic] = useState<AcademicSettings>(
-    () => store.get('settings_academic', { year: '2nd Year', semester: '1st Sem', section: 'A' })
   );
   const [theme, setTheme] = useState<ThemeMode>(
     () => store.get('settings_theme', 'system')
@@ -54,12 +42,6 @@ const SettingsPage = () => {
     const updated = { ...notifications, [key]: value };
     setNotifications(updated);
     store.set('settings_notifications', updated);
-  };
-
-  const updateAcademic = (key: keyof AcademicSettings, value: string) => {
-    const updated = { ...academic, [key]: value };
-    setAcademic(updated);
-    store.set('settings_academic', updated);
   };
 
   const updateTheme = (mode: ThemeMode) => {
@@ -107,13 +89,6 @@ const SettingsPage = () => {
           <ToggleRow label="Announcements" description="Department news & updates" checked={notifications.announcements} onChange={(v) => updateNotification('announcements', v)} />
           <ToggleRow label="Events" description="Upcoming events & fests" checked={notifications.events} onChange={(v) => updateNotification('events', v)} />
           <ToggleRow label="Assignment Reminders" description="Deadline alerts" checked={notifications.assignments} onChange={(v) => updateNotification('assignments', v)} />
-        </SettingsSection>
-
-        {/* ─── Academic Profile ─── */}
-        <SettingsSection icon={GraduationCap} title="Academic Profile">
-          <SelectRow label="Year" value={academic.year} options={YEARS} onChange={(v) => updateAcademic('year', v)} />
-          <SelectRow label="Semester" value={academic.semester} options={SEMESTERS} onChange={(v) => updateAcademic('semester', v)} />
-          <SelectRow label="Section" value={academic.section} options={SECTIONS} onChange={(v) => updateAcademic('section', v)} />
         </SettingsSection>
 
         {/* ─── Theme ─── */}
