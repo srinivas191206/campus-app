@@ -33,7 +33,13 @@ const HomePage = () => {
       <div className="cs-header-card rounded-2xl p-6 mb-6">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
-            <p className="text-muted-foreground text-sm font-medium mb-1">Good {getGreeting()} 👋</p>
+            <div className="flex items-center gap-2 mb-1">
+              <p className="text-muted-foreground text-sm font-medium">Good {getGreeting()} 👋</p>
+              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-500 tracking-wider">LIVE</span>
+              </div>
+            </div>
             <h1 className="text-xl font-bold text-foreground leading-tight">Welcome back, {displayName}</h1>
           </div>
           <button onClick={() => navigate('/profile')} className="w-14 h-14 rounded-full cs-gradient-primary flex items-center justify-center shadow-sm ring-4 ring-primary/5 overflow-hidden shrink-0 ml-4">
