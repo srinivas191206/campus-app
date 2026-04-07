@@ -58,6 +58,7 @@ export const sampleEvents: Event[] = [
     title: 'TechFest 2026',
     date: '2026-04-10',
     venue: 'University Auditorium',
+    category: 'Fest',
     description: 'Annual technical festival featuring coding competitions, hackathons, and guest lectures from industry experts. Register before the deadline at https://techfest.campus.edu or check our official social channels.',
     links: [
       { title: 'Official Brochure', url: 'https://campus.edu/brochure.pdf' }
@@ -68,6 +69,7 @@ export const sampleEvents: Event[] = [
     title: 'Alumni Meet & Greet',
     date: '2026-04-18',
     venue: 'CSE Seminar Hall',
+    category: 'Seminar',
     description: 'Interactive session with successful alumni from the CSE department sharing their career experiences.',
   },
   {
@@ -75,6 +77,7 @@ export const sampleEvents: Event[] = [
     title: 'Project Exhibition',
     date: '2026-04-25',
     venue: 'CSE Labs Block',
+    category: 'Exhibition',
     description: 'Final year students showcase their capstone projects. Open for all students and faculty. Project submission portal is officially active and accepting links: https://forms.gle/dummyxyz submission form.',
   },
 ];

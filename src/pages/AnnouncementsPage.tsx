@@ -20,6 +20,7 @@ export default function AnnouncementsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   
   const [filters, setFilters] = useState({
     course: 'All',
@@ -37,6 +38,7 @@ export default function AnnouncementsPage() {
       store.set('readAnnouncements', updated);
     }
     setSelectedAnnouncement(a);
+    setIsDescriptionExpanded(false);
   };
 
   const togglePin = (id: string, e?: React.MouseEvent) => {
@@ -206,7 +208,7 @@ export default function AnnouncementsPage() {
           {/* SEC 3: Archived Historical Feed */}
           {archived.length > 0 && (
             <section>
-              <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4 px-1">Archived</h3>
+              <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4 px-1">Archived Notices</h3>
               <div className="space-y-4">
                 {archived.map(a => (
                   <AnnouncementCard 
@@ -337,109 +339,133 @@ export default function AnnouncementsPage() {
            <div className="min-h-screen p-4 sm:p-6 flex flex-col items-center">
              
              {/* Sticky Nav inside modal */}
-             <div className="w-full max-w-2xl flex justify-between items-center mb-6 mt-2 sticky top-4 z-10">
+             <div className="w-full max-w-2xl flex justify-between items-center mb-4 mt-1 sticky top-4 z-10">
                 <button 
                   onClick={() => setSelectedAnnouncement(null)} 
-                  className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground active:scale-95 transition-all bg-card/80 backdrop-blur-xl border border-border/50 px-4 py-2.5 rounded-full shadow-sm"
+                  className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all bg-card/60 backdrop-blur-xl border border-border/40 px-4 py-2 rounded-full shadow-sm"
                 >
-                  <ChevronLeft className="w-4 h-4"/> Back to List
+                  <ChevronLeft className="w-3.5 h-3.5"/> Back
                 </button>
                 <button 
                   onClick={() => togglePin(selectedAnnouncement.id)} 
-                  className={`flex items-center gap-2 text-xs font-bold uppercase tracking-widest active:scale-95 transition-all bg-card/80 backdrop-blur-xl border border-border/50 px-4 py-2.5 rounded-full shadow-sm ${selectedAnnouncement.isPinned ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                  className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest transition-all bg-card/60 backdrop-blur-xl border border-border/40 px-4 py-2 rounded-full shadow-sm ${selectedAnnouncement.isPinned ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
                 >
-                  <Pin className={`w-4 h-4 ${selectedAnnouncement.isPinned ? 'fill-primary' : ''}`}/> {selectedAnnouncement.isPinned ? 'Unpin' : 'Pin'}
+                  <Pin className={`w-3.5 h-3.5 ${selectedAnnouncement.isPinned ? 'fill-primary' : ''}`}/> {selectedAnnouncement.isPinned ? 'Unpin' : 'Pin'}
                 </button>
              </div>
 
              <div className="w-full max-w-2xl bg-card rounded-[2.5rem] border border-border/60 shadow-2xl overflow-hidden mb-12 animate-in slide-in-from-bottom-8 duration-500">
                 
-                {/* Visual Header Block */}
-                <div className="p-8 pb-8 border-b border-border/30 bg-secondary/10 relative overflow-hidden">
-                   <div className={`absolute top-0 left-0 right-0 h-1 ${PRIORITY_CONFIG[selectedAnnouncement.priority].border}`} />
-                   
-                   <div className="flex items-center gap-2 mb-5 mt-1">
-                     <span className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg border border-border/30 ${PRIORITY_CONFIG[selectedAnnouncement.priority].bg} ${PRIORITY_CONFIG[selectedAnnouncement.priority].text}`}>
-                       {PRIORITY_CONFIG[selectedAnnouncement.priority].label} Priority
+              <div className="p-6 border-b border-border/30 bg-secondary/5 relative overflow-hidden">
+                 <div className={`absolute top-0 left-0 right-0 h-1 ${PRIORITY_CONFIG[selectedAnnouncement.priority].border} opacity-50`} />
+                 
+                 <div className="flex items-center gap-2 mb-3 mt-0.5">
+                   <span className={`text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md border border-border/30 ${PRIORITY_CONFIG[selectedAnnouncement.priority].bg} ${PRIORITY_CONFIG[selectedAnnouncement.priority].text}`}>
+                     {PRIORITY_CONFIG[selectedAnnouncement.priority].label}
+                   </span>
+                   <span className="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md bg-secondary text-muted-foreground border border-border/30">
+                     {selectedAnnouncement.category}
+                   </span>
+                 </div>
+
+                 <h2 className="text-xl font-bold text-foreground leading-tight tracking-tight mb-5">
+                   {selectedAnnouncement.title}
+                   {isNew(selectedAnnouncement.date) && (
+                     <span className="ml-3 text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-primary/10 text-primary">
+                       NEW
                      </span>
-                     <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg bg-secondary text-muted-foreground border border-border/30">
-                       {selectedAnnouncement.category}
+                   )}
+                 </h2>
+
+                 <div className="flex flex-wrap gap-x-8 gap-y-3 pt-4 border-t border-border/20">
+                   <div className="flex flex-col">
+                     <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-0.5">Published</span>
+                     <span className="text-[11px] font-bold text-foreground">
+                       {new Date(selectedAnnouncement.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' })}
                      </span>
                    </div>
-
-                   <h2 className="text-xl sm:text-2xl font-bold text-foreground leading-snug tracking-tight mb-8 flex flex-wrap items-center gap-3">
-                     {selectedAnnouncement.title}
-                     {isNew(selectedAnnouncement.date) && (
-                       <span className="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-primary/10 text-primary translate-y-[-1px]">
-                         NEW
-                       </span>
-                     )}
-                   </h2>
-
-                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 border-t border-border/30 pt-6">
-                     <div className="flex flex-col gap-1.5">
-                       <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Date</span>
-                       <span className="text-sm font-semibold text-foreground">
-                         {new Date(selectedAnnouncement.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' })}
-                       </span>
-                     </div>
-                     <div className="flex flex-col gap-1.5">
-                       <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Source</span>
-                       <span className="text-sm font-semibold text-foreground">
-                         {selectedAnnouncement.source}
-                       </span>
-                     </div>
-                     <div className="flex flex-col gap-1.5">
-                       <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Audience</span>
-                       <span className="text-sm font-semibold text-foreground">
-                         {selectedAnnouncement.audience}
-                       </span>
-                     </div>
+                   <div className="flex flex-col">
+                     <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-0.5">Origin</span>
+                     <span className="text-[11px] font-bold text-foreground">
+                       {selectedAnnouncement.source}
+                     </span>
                    </div>
-                </div>
-
-                <div className="p-8 pt-8">
-                   <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none text-foreground leading-loose mb-10 opacity-90 font-medium tracking-wide">
-                     <p>{selectedAnnouncement.fullDescription}</p>
+                   <div className="flex flex-col">
+                     <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-0.5">Target</span>
+                     <span className="text-[11px] font-bold text-foreground truncate max-w-[120px]">
+                       {selectedAnnouncement.audience}
+                     </span>
                    </div>
-                   
+                 </div>
+              </div>
+
+                <div className="p-6 pt-5">
+                   {/* 1. Attachment Priority (Visible Sooner) */}
                    {selectedAnnouncement.attachmentURL && (
-                     <div className="mt-10 border-t border-border/30 pt-8">
-                       <h4 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-5">Attachment</h4>
-                       
-                       <div className="flex flex-col sm:flex-row items-center justify-between p-4 rounded-2xl bg-secondary/30 border border-border/30 shadow-sm gap-4">
-                          <div className="flex items-center gap-4 w-full sm:w-auto">
-                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                              selectedAnnouncement.attachmentType === 'pdf' ? 'bg-red-500/10 text-red-500' : 
-                              selectedAnnouncement.attachmentType === 'image' ? 'bg-blue-500/10 text-blue-500' : 'bg-primary/10 text-primary'
-                            }`}>
-                              {selectedAnnouncement.attachmentType === 'pdf' ? <FileText className="w-6 h-6" /> : 
-                               selectedAnnouncement.attachmentType === 'image' ? <ImageIcon className="w-6 h-6" /> : <FileText className="w-6 h-6" />}
-                            </div>
-                            <div className="flex flex-col min-w-0">
-                              <span className="text-sm font-bold text-foreground truncate max-w-[200px]">Official_Document.{selectedAnnouncement.attachmentType || 'pdf'}</span>
-                              <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mt-0.5">Click to preview or save</span>
-                            </div>
+                     <div className="mb-8 p-4 rounded-2xl bg-secondary/20 border border-border/30 flex flex-col gap-4 animate-in slide-in-from-top-2 duration-300">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                            selectedAnnouncement.attachmentType === 'pdf' ? 'bg-red-500/10 text-red-500' : 
+                            selectedAnnouncement.attachmentType === 'image' ? 'bg-blue-500/10 text-blue-500' : 'bg-primary/10 text-primary'
+                          }`}>
+                            {selectedAnnouncement.attachmentType === 'pdf' ? <FileText className="w-5 h-5" /> : 
+                             selectedAnnouncement.attachmentType === 'image' ? <ImageIcon className="w-5 h-5" /> : <FileText className="w-5 h-5" />}
                           </div>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-[13px] font-bold text-foreground truncate">Official_Document.{selectedAnnouncement.attachmentType || 'pdf'}</span>
+                            <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest mt-0.5">
+                              {selectedAnnouncement.attachmentType === 'pdf' ? 'PDF notice • Download ready' : 'Image document available'}
+                            </span>
+                          </div>
+                        </div>
 
-                          <div className="flex w-full sm:w-auto items-center gap-3">
-                            <button 
-                              onClick={() => window.open(selectedAnnouncement.attachmentURL, '_blank')}
-                              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-card border border-border/40 shadow-sm text-xs font-bold text-foreground hover:bg-secondary transition-all active:scale-95"
-                            >
-                              <ExternalLink className="w-3.5 h-3.5" /> View
-                            </button>
-                            <a 
-                              href={selectedAnnouncement.attachmentURL}
-                              download
-                              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/20 text-xs font-bold hover:opacity-90 active:scale-95 transition-all"
-                            >
-                              <Download className="w-3.5 h-3.5" /> Download
-                            </a>
-                          </div>
-                       </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button 
+                            onClick={() => window.open(selectedAnnouncement.attachmentURL, '_blank')}
+                            className="flex items-center justify-center gap-2 py-3 rounded-xl bg-card border border-border/40 text-[9px] font-black uppercase tracking-widest text-foreground hover:bg-secondary transition-all active:scale-95"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" /> View Notice
+                          </button>
+                          <a 
+                            href={selectedAnnouncement.attachmentURL}
+                            download
+                            className="flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-primary-foreground text-[9px] font-black uppercase tracking-widest shadow-md shadow-primary/20 hover:opacity-90 active:scale-95 transition-all"
+                          >
+                            <Download className="w-3.5 h-3.5" /> Download
+                          </a>
+                        </div>
                      </div>
                    )}
+
+                   {/* 2. Notice Description (with Expand/Collapse) */}
+                   <div>
+                     <div className="flex items-center gap-3 mb-4">
+                        <h4 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground/60 whitespace-nowrap">Notice Summary</h4>
+                        <div className="h-px w-full bg-border/30"></div>
+                     </div>
+
+                     <div className={`relative max-w-[65ch] mx-auto text-foreground font-medium transition-all duration-500 ${!isDescriptionExpanded ? 'max-h-[160px] overflow-hidden' : 'max-h-[2000px]'}`}>
+                       <div className="space-y-4 text-sm sm:text-[15px] leading-relaxed opacity-90 tracking-wide">
+                         {selectedAnnouncement.fullDescription.split('\n').map((para, i) => para.trim() && (
+                           <p key={i}>{para}</p>
+                         ))}
+                       </div>
+
+                       {/* Fade Overlay for collapsed state */}
+                       {!isDescriptionExpanded && selectedAnnouncement.fullDescription.length > 250 && (
+                          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+                       )}
+                     </div>
+
+                     {selectedAnnouncement.fullDescription.length > 250 && (
+                        <button 
+                          onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                          className="mt-4 text-[10px] font-black uppercase tracking-widest text-primary hover:underline flex items-center justify-center w-full py-3 bg-secondary/20 rounded-xl transition-all hover:bg-secondary/40"
+                        >
+                          {isDescriptionExpanded ? 'Show Less' : 'Read More Notice'}
+                        </button>
+                     )}
+                   </div>
                 </div>
              </div>
            </div>
@@ -453,69 +479,76 @@ export default function AnnouncementsPage() {
 function AnnouncementCard({ a, isNew, isRead, isArchived, onClick }: { a: Announcement, isNew: boolean, isRead: boolean, isArchived?: boolean, onClick: () => void }) {
   const cfg = PRIORITY_CONFIG[a.priority];
   
+  // Dynamic Attachment Label Logic
+  const getAttachmentLabel = (type: string | undefined) => {
+    if (type === 'pdf') return 'PDF Available';
+    if (type === 'image') return 'Image Attached';
+    return 'Circular Attached';
+  };
+
   return (
     <div 
       onClick={onClick}
-      className={`relative overflow-hidden group flex flex-col p-6 bg-card border border-border/40 shadow-sm hover:shadow-md cursor-pointer hover:border-border transition-all duration-300 active:scale-[0.98] ${a.isPinned ? 'rounded-[2.5rem] border-primary/20 bg-gradient-to-br from-primary/5 to-transparent' : 'rounded-[2rem]'} ${isArchived ? 'opacity-60 grayscale-[10%]' : ''}`}
+      className={`relative overflow-hidden group flex flex-col p-4 bg-card border border-border/40 shadow-sm hover:shadow-md cursor-pointer hover:border-border transition-all duration-300 active:scale-[0.98] ${a.isPinned ? 'rounded-3xl ring-2 ring-primary/20 bg-gradient-to-br from-primary/5 to-transparent' : 'rounded-2xl'} ${isArchived ? 'opacity-60' : ''}`}
     >
-      <div className={`absolute top-0 bottom-0 left-0 w-1.5 ${cfg.border} opacity-80`} />
+      <div className={`absolute top-0 bottom-0 left-0 w-1 ${cfg.border} opacity-70`} />
       
       {/* Absolute Unread Dot Indicator */}
       {!isRead && !isArchived && (
-        <span className="absolute top-6 right-6 w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(0,0,0,0.5)] shadow-primary/50 animate-pulse" />
+        <span className="absolute top-4 right-4 w-2 h-2 rounded-full bg-primary shadow-lg shadow-primary/40 animate-pulse" />
       )}
 
-      {/* LINE 1: Clean Bold Title Matrix (Pushing against right dot boundary securely) */}
-      <h3 className={`text-lg font-bold text-foreground leading-[1.3] mb-2 pr-4 ${isRead ? 'opacity-85' : ''}`}>
-        {a.title}
-      </h3>
+      <div className="flex flex-col gap-1 pr-6 mb-3">
+        {/* LINE 1: Title Matrix */}
+        <h3 className={`text-base font-bold text-foreground leading-tight truncate ${isRead ? 'opacity-80' : ''}`}>
+          {a.title}
+        </h3>
 
-      {/* LINE 2: Short Preview */}
-      <p className={`text-sm font-medium text-muted-foreground leading-relaxed line-clamp-2 mb-5 ${isRead ? 'opacity-70' : ''}`}>
-        {a.shortDescription}
-      </p>
+        {/* LINE 2: One-Line Preview */}
+        <p className={`text-[13px] font-medium text-muted-foreground truncate ${isRead ? 'opacity-70' : ''}`}>
+          {a.shortDescription}
+        </p>
 
-      {/* LINE 3: Precise Wide Tracking Spatial Row (Audience & Date) */}
-      <div className="flex items-center justify-between mb-5 border-t border-border/30 pt-4">
-        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest bg-secondary/50 px-2 py-1 rounded-md">
-          {a.audience}
-        </span>
-        <span className="text-[10px] font-bold text-foreground opacity-60 uppercase tracking-widest pl-2">
-          {new Date(a.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' })}
-        </span>
+        {/* LINE 3: Compact Metadata Row */}
+        <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-wider opacity-60">
+          <span>{a.audience}</span>
+          <span className="opacity-40">•</span>
+          <span>{new Date(a.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' })}</span>
+        </div>
       </div>
 
-      {/* LINE 4: Substantive Badge Matrix Block */}
-      <div className="flex flex-wrap items-center gap-2 mt-auto">
-        <span className="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md border border-border/50 bg-secondary text-muted-foreground opacity-90">
-          {a.category}
-        </span>
-        <span className={`text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md ${cfg.bg} ${cfg.text}`}>
-          {cfg.label} Priority
-        </span>
+      {/* LINE 4: Badge & Attachment Row */}
+      <div className="flex items-center justify-between mt-auto pt-2 border-t border-border/20">
+        <div className="flex items-center gap-1.5 overflow-hidden">
+          <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md ${cfg.bg} ${cfg.text} border border-transparent shadow-sm whitespace-nowrap`}>
+            {cfg.label}
+          </span>
+          <span className="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md bg-secondary/60 text-muted-foreground border border-border/20 whitespace-nowrap">
+            {a.category}
+          </span>
+        </div>
         
-        {/* NEW Threshold appended naturally here if unread/non-archived */}
-        {isNew && !isArchived && (
-           <span className="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md bg-primary/10 text-primary animate-pulse ml-auto">
-             NEW
-           </span>
-        )}
-
-        {/* Attachment logic shifted seamlessly right aligning with visual flow standard. */}
-        {a.attachmentURL && !isNew && (
-          <div className="flex items-center gap-1.5 ml-auto border border-border/30 bg-secondary/20 px-2.5 py-1 rounded-md opacity-80">
-            {a.attachmentType === 'pdf' ? (
-              <FileText className="w-3 h-3 text-red-500/80" />
-            ) : (
-              <Megaphone className="w-3 h-3 text-blue-500/80" />
-            )}
-            <span className="text-[9px] font-black text-foreground uppercase tracking-widest opacity-80">
-              {a.attachmentType === 'pdf' ? 'PDF Attached' : 'Linked File'}
+        <div className="flex items-center gap-3">
+          {isNew && !isArchived && (
+            <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md bg-primary/10 text-primary animate-pulse">
+              NEW
             </span>
-          </div>
-        )}
-      </div>
+          )}
 
+          {a.attachmentURL && (
+            <div className="flex items-center gap-1 opacity-70">
+              {a.attachmentType === 'pdf' ? (
+                <FileText className="w-3 h-3 text-red-500" />
+              ) : (
+                <ImageIcon className="w-3 h-3 text-blue-500" />
+              )}
+              <span className="text-[9px] font-black text-foreground uppercase tracking-widest">
+                {getAttachmentLabel(a.attachmentType)}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

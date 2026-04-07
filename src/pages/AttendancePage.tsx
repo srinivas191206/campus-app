@@ -179,12 +179,6 @@ const AttendancePage = () => {
       <div className="flex flex-col gap-2 mb-6">
         <div className="flex items-center justify-between mb-2">
           <BackButton />
-          <button 
-            onClick={() => setShowAdd(true)}
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-primary/10 text-primary active:scale-95 transition-transform"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
         </div>
         <h1 className="text-2xl font-bold text-foreground">Attendance Tracker</h1>
         <p className="text-sm text-muted-foreground tracking-wide">Subject-wise planning & prediction</p>
@@ -230,6 +224,20 @@ const AttendancePage = () => {
             </div>
         </div>
       </div>
+
+      {/* Prominent Add Button (Dashed Card) */}
+      <button 
+        onClick={() => setShowAdd(true)}
+        className="w-full cs-card p-6 border-dashed border-2 bg-primary/5 hover:bg-primary/10 border-primary/20 transition-all flex flex-col items-center justify-center gap-3 mb-8 group active:scale-95 duration-200 shadow-sm"
+      >
+        <div className="w-14 h-14 bg-primary text-primary-foreground rounded-[1.5rem] flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+          <Plus className="w-8 h-8 stroke-[3.5px]" />
+        </div>
+        <div className="text-center">
+          <p className="font-black text-lg text-foreground tracking-tight">Add New Subject</p>
+          <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.1em] mt-1 opacity-70">Start tracking attendance for a class</p>
+        </div>
+      </button>
 
       {filteredRecords.length > 0 ? (
         <div className="space-y-5 mb-8">

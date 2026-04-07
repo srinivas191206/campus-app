@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { MapPin, CalendarDays, ExternalLink, Link as LinkIcon, ChevronLeft, Building2 } from 'lucide-react';
+import { MapPin, CalendarDays, ExternalLink, Link as LinkIcon, ChevronLeft, Building2, Search, SlidersHorizontal, Clock } from 'lucide-react';
 import { sampleEvents } from '@/lib/sample-data';
 import type { Event } from '@/types';
 import BackButton from '@/components/BackButton';
@@ -44,47 +44,96 @@ export default function EventsPage() {
         <p className="text-sm font-medium text-muted-foreground tracking-wide mt-1">Institutional gatherings & fests</p>
       </div>
 
+      {/* Premium Search & Filter Ribbon */}
+      <div className="flex items-center gap-3 mb-8">
+        <div className="relative flex-1 group">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Search className="w-5 h-5 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
+          </div>
+          <input
+            type="text"
+            placeholder="Search events"
+            className="w-full bg-card border border-border/60 text-foreground rounded-2xl pl-12 pr-4 py-3.5 text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm font-medium"
+          />
+        </div>
+        
+        <button 
+          className="w-12 h-12 rounded-2xl bg-card border border-border/60 flex items-center justify-center text-muted-foreground hover:bg-secondary/80 active:scale-95 transition-all relative shadow-sm"
+        >
+          <SlidersHorizontal className="w-5 h-5" />
+        </button>
+      </div>
+
       <div className="space-y-4">
         {sampleEvents.map(event => {
           const { mergedLinks, cleanText } = parseLinks(event.description, event.links);
           const hasLinks = mergedLinks.length > 0;
+          const eventDate = new Date(event.date);
+          const today = new Date();
+          today.setHours(0,0,0,0);
+          
+          const diffTime = eventDate.getTime() - today.getTime();
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          
+          const countdownText = diffDays === 0 ? "Starts today" : 
+                               diffDays === 1 ? "Starts tomorrow" : 
+                               diffDays > 0 ? `Starts in ${diffDays} days` : "";
 
           return (
             <div 
               key={event.id} 
               onClick={() => setSelectedEvent(event)}
-              className="relative overflow-hidden group flex flex-col p-6 bg-card border border-border/40 rounded-[2rem] shadow-sm cursor-pointer hover:border-border transition-all duration-300 active:scale-[0.98]"
+              className="relative overflow-hidden group flex flex-col p-5 bg-card border border-border/40 rounded-[2rem] shadow-sm cursor-pointer hover:border-border transition-all duration-300 active:scale-[0.98]"
             >
               <div className="absolute top-0 bottom-0 left-0 w-1 bg-primary opacity-80" />
               
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-bold text-primary uppercase tracking-widest px-3 py-1.5 rounded-lg bg-primary/10">
-                  {new Date(event.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' })}
-                </span>
+              <div className="flex items-center justify-between mb-3.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-primary uppercase tracking-widest px-2.5 py-1.5 rounded-lg bg-primary/10 border border-primary/5 shadow-sm">
+                    {eventDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' })} • {eventDate.toLocaleDateString('en-US', { weekday: 'short' })}
+                  </span>
+                  
+                  <span className="text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md bg-secondary text-muted-foreground border border-border/20 shadow-sm">
+                    {event.category}
+                  </span>
+                </div>
                 
-                {hasLinks && (
-                  <div className="flex items-center gap-1.5 border border-primary/20 bg-primary/5 px-2.5 py-1 rounded-md">
-                    <LinkIcon className="w-3 h-3 text-primary" />
-                    <span className="text-[9px] font-black text-primary uppercase tracking-widest opacity-90">
-                      Link Available
-                    </span>
-                  </div>
-                )}
+                <div className="h-6 flex items-center">
+                  {hasLinks ? (
+                    <div className="flex items-center gap-1.5 border border-primary/20 bg-primary/5 px-2.5 py-1 rounded-md">
+                      <LinkIcon className="w-3 h-3 text-primary" />
+                      <span className="text-[9px] font-black text-primary uppercase tracking-widest opacity-90">
+                        Link Available
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="w-20" /> // Spacer to keep layout aligned
+                  )}
+                </div>
               </div>
 
-              <h3 className="text-xl font-bold text-foreground leading-snug tracking-tight mb-2 pr-4">{event.title}</h3>
+              <h3 className="text-lg font-bold text-foreground leading-tight tracking-tight mb-1.5 pr-4 line-clamp-2">{event.title}</h3>
               
-              <p className="text-sm font-medium text-muted-foreground leading-relaxed line-clamp-2 mb-4 opacity-80">
+              <p className="text-[13px] font-medium text-muted-foreground leading-relaxed line-clamp-2 mb-3.5 opacity-80">
                 {cleanText}
               </p>
 
-              <div className="flex items-center justify-between mt-auto border-t border-border/30 pt-4">
+              <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/20">
                  <div className="flex items-center gap-2">
-                   <Building2 className="w-3.5 h-3.5 text-muted-foreground opacity-70" />
-                   <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest truncate max-w-[150px]">
-                     {event.venue}
+                   <div className="w-6 h-6 rounded-md bg-secondary flex items-center justify-center">
+                     <MapPin className="w-3 h-3 text-primary opacity-80" />
+                   </div>
+                   <span className="text-[10px] font-bold text-foreground/80 uppercase tracking-widest truncate max-w-[150px]">
+                     Venue: {event.venue}
                    </span>
                  </div>
+
+                 {countdownText && (
+                   <div className="flex items-center gap-1.5 text-[10px] font-bold text-primary animate-pulse">
+                     <Clock className="w-3 h-3" />
+                     {countdownText}
+                   </div>
+                 )}
               </div>
             </div>
           );

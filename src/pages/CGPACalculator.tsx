@@ -396,17 +396,19 @@ const CGPACalculator = () => {
 
   return (
     <div className="cs-page pb-8">
-      <div className="mb-4">
-        {viewState === 'list' ? (
-          <BackButton />
-        ) : (
-          <button 
-            onClick={() => setViewState('list')}
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to Records
-          </button>
-        )}
+      <div className="flex flex-col gap-2 mb-6">
+        <div className="flex items-center justify-between mb-2">
+          {viewState === 'list' ? (
+            <BackButton />
+          ) : (
+            <button 
+              onClick={() => setViewState('list')}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-xs font-bold uppercase tracking-widest"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back
+            </button>
+          )}
+        </div>
       </div>
 
       <div ref={topRef} />
@@ -635,10 +637,21 @@ const CGPACalculator = () => {
               ))}
             </div>
 
-            <div className="flex gap-3 mb-8">
-              <button onClick={addSubject} className="flex-1 py-3.5 rounded-xl bg-secondary text-foreground text-sm font-bold flex items-center justify-center gap-2 hover:bg-secondary/80 transition-colors">
-                <Plus className="w-4 h-4" /> Add Subject
-              </button>
+            {/* Prominent Add Button (Dashed Card) */}
+            <button 
+              onClick={addSubject}
+              className="w-full cs-card p-6 border-dashed border-2 bg-primary/5 hover:bg-primary/10 border-primary/20 transition-all flex flex-col items-center justify-center gap-3 mb-6 group active:scale-95 duration-200 shadow-sm"
+            >
+              <div className="w-14 h-14 bg-primary text-primary-foreground rounded-[1.5rem] flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+                <Plus className="w-8 h-8 stroke-[3.5px]" />
+              </div>
+              <div className="text-center">
+                <p className="font-black text-lg text-foreground tracking-tight">Add New Subject</p>
+                <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.1em] mt-1 opacity-70">Include another subject in this semester</p>
+              </div>
+            </button>
+
+            <div className="flex justify-end mb-8">
               <button 
                 onClick={() => {
                   showModal({
@@ -651,9 +664,9 @@ const CGPACalculator = () => {
                     }
                   });
                 }} 
-                className="py-3.5 px-6 rounded-xl bg-destructive/10 text-destructive text-sm font-bold flex items-center justify-center gap-2 hover:bg-destructive/20 transition-colors"
+                className="py-2.5 px-4 rounded-xl bg-destructive/10 text-destructive text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:bg-destructive/20 transition-colors"
               >
-                <RotateCcw className="w-4 h-4" /> Reset
+                <RotateCcw className="w-3.5 h-3.5" /> Clear All
               </button>
             </div>
 
@@ -787,12 +800,23 @@ const CGPACalculator = () => {
           })}
         </div>
 
-        <div className="flex gap-3 mb-6">
-          <button onClick={addCGPASem} className="flex-1 py-3 rounded-xl bg-secondary text-secondary-foreground text-sm font-semibold flex items-center justify-center gap-2">
-            <Plus className="w-4 h-4" /> Add Semester
-          </button>
-          <button onClick={resetCGPA} className="py-3 px-4 rounded-xl bg-destructive/10 text-destructive text-sm font-semibold flex items-center justify-center gap-2">
-            <RotateCcw className="w-4 h-4" /> Reset
+        {/* Prominent Add Button (Dashed Card) */}
+        <button 
+          onClick={addCGPASem}
+          className="w-full cs-card p-6 border-dashed border-2 bg-primary/5 hover:bg-primary/10 border-primary/20 transition-all flex flex-col items-center justify-center gap-3 mb-6 group active:scale-95 duration-200 shadow-sm"
+        >
+          <div className="w-14 h-14 bg-primary text-primary-foreground rounded-[1.5rem] flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+            <Plus className="w-8 h-8 stroke-[3.5px]" />
+          </div>
+          <div className="text-center">
+            <p className="font-black text-lg text-foreground tracking-tight">Add Semester</p>
+            <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.1em] mt-1 opacity-70">Include another semester in your CGPA</p>
+          </div>
+        </button>
+
+        <div className="flex justify-end mb-6">
+          <button onClick={resetCGPA} className="py-2.5 px-4 rounded-xl bg-destructive/10 text-destructive text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:bg-destructive/20 transition-colors">
+            <RotateCcw className="w-3.5 h-3.5" /> Reset All
           </button>
         </div>
 

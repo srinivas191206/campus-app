@@ -57,6 +57,8 @@ export interface Assignment {
   description: string;
   completed: boolean;
   createdAt: string;
+  priority: 'High' | 'Medium' | 'Low';
+  completedAt?: string;
 }
 
 export interface Announcement {
@@ -82,6 +84,7 @@ export interface Event {
   title: string;
   date: string;
   venue: string;
+  category: 'Fest' | 'Seminar' | 'Workshop' | 'Exhibition' | 'Meet';
   description: string;
   image?: string;
   links?: { title: string, url: string }[];

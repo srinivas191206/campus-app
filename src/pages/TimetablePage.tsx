@@ -181,8 +181,17 @@ const TimetablePage = () => {
             </div>
           </div>
         ) : (
-          <button onClick={() => setShowAdd(true)} className="w-full py-4 rounded-xl bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-transform">
-            <Plus className="w-5 h-5 stroke-[2.5px]" /> Add Class
+          <button 
+            onClick={() => setShowAdd(true)}
+            className="w-full cs-card p-6 border-dashed border-2 bg-primary/5 hover:bg-primary/10 border-primary/20 transition-all flex flex-col items-center justify-center gap-3 mb-8 group active:scale-95 duration-200 shadow-sm"
+          >
+            <div className="w-14 h-14 bg-primary text-primary-foreground rounded-[1.5rem] flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
+              <Plus className="w-8 h-8 stroke-[3.5px]" />
+            </div>
+            <div className="text-center">
+              <p className="font-black text-lg text-foreground tracking-tight">Add New Class</p>
+              <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-[0.1em] mt-1 opacity-70">Custom entry for your personal schedule</p>
+            </div>
           </button>
         )}
       </div>
